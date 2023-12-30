@@ -554,20 +554,7 @@ pub async fn request_info_stream(
     }
 }
 
-#[derive(Parser, Debug, Clone)]
-#[command(author, version, about, long_about = None)]
-struct Args {
-    #[arg(long, short, value_name = "FILE")]
-    config: Option<PathBuf>,
-    #[arg(long, short)]
-    ip: Option<Ipv4Addr>,
-    #[arg(long, short, default_value_t = 65530)]
-    port: u16,
-}
-
-#[tokio::main]
-async fn main() {
-
+pub fn tauri_main() {
     let quit = CustomMenuItem::new("quit".to_string(), "Quit").accelerator("Cmd+Q");
     let system_tray_menu = SystemTrayMenu::new().add_item(quit);
     tauri::Builder::default()
@@ -629,8 +616,22 @@ async fn main() {
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-    
+}
 
+
+#[derive(Parser, Debug, Clone)]
+#[command(author, version, about, long_about = None)]
+struct Args {
+    #[arg(long, short, value_name = "FILE")]
+    config: Option<PathBuf>,
+    #[arg(long, short)]
+    ip: Option<Ipv4Addr>,
+    #[arg(long, short, default_value_t = 65530)]
+    port: u16,
+}
+
+#[tokio::main]
+async fn main() {
     simple_logger::SimpleLogger::new()
         .with_level(log::LevelFilter::Warn)
         .with_module_level("ai00_server", log::LevelFilter::Trace)
@@ -662,6 +663,8 @@ async fn main() {
         load_web("assets/www/index.zip", &path).expect("load frontend failed");
         path
     };
+
+    let _=tauri_main();
 
     // create `assets/www/plugins` if it doesn't exist
     if !Path::new("assets/www/plugins").exists() {
@@ -720,7 +723,5 @@ async fn main() {
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
     log::info!("server started at {addr}");
     axum::serve(listener, app).await.unwrap();
-
-
-
+    
 }
