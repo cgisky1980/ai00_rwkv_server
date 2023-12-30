@@ -17,6 +17,9 @@ default-run = "ai00_server"
 [[bin]]
 name = "converter"
 
+[build-dependencies]
+tauri-build = { version = "1.5.1", features = [] }
+
 [dependencies]
 # web-rwkv = "0.4.7"
 web-rwkv = { git = "https://github.com/cryscan/web-rwkv", tag = "v0.4.8" }
@@ -27,8 +30,6 @@ memmap2 = "0.9"
 bytemuck = "1"
 regex = "1.8"
 clap = { version = "4.3", features = ["derive"] }
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
 qp-trie = "0.8"
 fastrand = "2"
 itertools = "0.12"
@@ -42,6 +43,20 @@ zip-extract = "0.1"
 tempfile = "3.6"
 toml = "0.8.6"
 sha2 = "0.10.8"
+
+serde_json = "1"
+serde = { version = "1", features = ["derive"] }
+tauri = { version = "1.5.4", features = [ "macos-private-api", "system-tray", "api-all"] }
+tauri-plugin-positioner = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1", features = ["system-tray"] }
+
+
+[features]
+# by default Tauri runs in production mode
+# when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
+default = ["custom-protocol"]
+# this feature is used used for production builds where `devPath` points to the filesystem
+# DO NOT remove this
+custom-protocol = ["tauri/custom-protocol"]
 
 [dependencies.web-rwkv-converter]
 git = "https://github.com/cryscan/web-rwkv-converter"
@@ -63,4 +78,4 @@ features = [
 ]
 
 [profile.release]
-lto = true
+lto = false

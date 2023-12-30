@@ -1,0 +1,16 @@
+[model]
+path = "assets/models/RWKV-4-World-0.4B-v1-20230529-ctx4096.st" # Path to the model.
+quant = 0                                                       # Layers to be quantized.
+quant_type = "Int8"                                             # Quantization type ("Int8" or "NF4").
+turbo = true                                                    # Whether to use alternative GEMM kernel to speed-up long prompts.
+token_chunk_size = 32                                           # Size of token chunk that is inferred at once. For high end GPUs, this could be 64 or 128 (faster).
+head_chunk_size = 8192                                          # DO NOT modify this if you don't know what you are doing.
+max_runtime_batch = 8                                           # The maximum batches that can be scheduled for inference at the same time.
+max_batch = 16                                                  # The maximum batches that are cached on GPU.
+embed_layer = 2                                                 # The (reversed) layer number whose output is used as embedding.
+
+[tokenizer]
+path = "assets/tokenizer/rwkv_vocab_v20230424.json" # Path to the tokenizer.
+
+[adapter]
+Auto = {}
